@@ -59,12 +59,8 @@ bool shell_read_line(char *input, int size) {
 		 return false;
 	}
 
-	// newline removal loop
-	int i = 0;
-	while (input[i] != '\0' && input[i] != '\n') {
-		i++;
-	}
-	input[i] = '\0';
+	// removes '\n' in input with '\0' using standard func
+	input[strcspn(input, "\n")] = '\0';
 
 	return true;
 }
