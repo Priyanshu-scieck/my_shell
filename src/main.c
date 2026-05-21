@@ -1,6 +1,8 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include "my_shell_parser.h"
 
 #define BUFFER_SIZE 1024
 
@@ -33,8 +35,18 @@ void shell_read_loop(void){
 			puts("exiting shell....");
 			break;
 		}
+		
+		char **args = shell_parse_line(input);
 
-		printf("your command: %s\n", input);
+		if (args == NULL) {
+			puts("parsing error");
+		}
+		else {
+			int i = 0;
+			while (args[i] != NULL) puts(args[i++]);
+		}
+
+		free(args);
 	}
 
 	puts("exited");
