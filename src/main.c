@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "my_shell_parser.h"
+#include "my_shell_executor.h"
 
 #define BUFFER_SIZE 1024
 
@@ -11,23 +12,20 @@ bool shell_read_line(char *, int);
 
 int main(void)
 {
-
 	shell_read_loop();
-	
+
 	return 0;
 }
 
-
-void shell_read_loop(void){
-
+void shell_read_loop(void)
+{
 	char input[BUFFER_SIZE];
+	char **args;
 
 	while (1) {	
-
 		fputs("myshell> ", stdout);
 		fflush(stdout);
 		
-
 		if (shell_read_line(input, sizeof(input)) == false)
 			break;
 
@@ -36,30 +34,24 @@ void shell_read_loop(void){
 			break;
 		}
 		
-		char **args = shell_parse_line(input);
-
-		if (args == NULL) {
+		args = shell_parse_line(input);
+		if (args == NULL)
 			puts("parsing error");
-		}
-		else {
-			int i = 0;
-			while (args[i] != NULL) puts(args[i++]);
-		}
+		else
+			shell_execute(args);
 
 		free(args);
 	}
 
 	puts("exited");
-	
 }
 
-bool shell_read_line(char *input, int size) {
+bool shell_read_line(char *input, int size)
+{
+	if (fgets(input, size, stdin) == NULL)
+		return false;
 
-	if (fgets(input, size, stdin) == NULL) {
-		 return false;
-	}
-
-	// removes '\n' in input with '\0' using standard func
+	/* removes '\n' in input with '\0' using standard func */
 	input[strcspn(input, "\n")] = '\0';
 
 	return true;
