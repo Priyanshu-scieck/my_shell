@@ -2,18 +2,16 @@
 #include <string.h>
 #include "my_shell_parser.h"
 
-
 char **shell_parse_line(char *line)
 {
 	char **args = malloc(ARGS_LEN * sizeof(char *));
-
-	if (args == NULL) {
-		return NULL;
-	}
-
+	char *str;
 	int i = 0;
-	char *str = strtok(line, TOKEN_DELIMETER); 	// used standard string.h func
 
+	if (args == NULL)
+		return NULL;
+
+	str = strtok(line, TOKEN_DELIMETER);
 	while (str != NULL && i < ARGS_LEN - 1) {
 		args[i++] = str;
 		str = strtok(NULL, TOKEN_DELIMETER);
