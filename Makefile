@@ -1,27 +1,29 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Wall -Wextra -O2 -Iinclude
+
 TARGET = bin/myshell
 
-# Find all .c files in src/
-SRCS = $(wildcard src/*.c)
+# 1. Look for source files across both directories
+SRCS = $(wildcard src/*.c) $(wildcard src/builtins/*.c)
 
-# This replaces 'src/filename.c' with 'bin/filename.o'
-OBJS = $(patsubst src/%.c, bin/%.o, $(SRCS))
+# 2. Tell Make where to search for prerequisites automatically
+VPATH = src src/builtins
 
-# The default target
-all: $(TARGET)
+# 3. Strip the directory paths so all objects are flatly named (e.g., bin/cd.o)
+OBJS = $(patsubst %.c, bin/%.o, $(notdir $(SRCS)))
 
-# Link the object files from the bin directory into the final executable
+all: bin $(TARGET)
+
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@
 
-# Compilation rule: compiles src/%.c directly into bin/%.o
-# It makes sure the bin/ directory exists before compiling
-bin/%.o: src/%.c
-	@mkdir -p bin
+# compilation rule that handles ALL directories
+bin/%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Clean rule wipes out the entire bin directory and its contents
+bin:
+	mkdir -p bin
+
 clean:
 	rm -rf bin
 

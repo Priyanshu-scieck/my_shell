@@ -1,32 +1,22 @@
+#include <complex.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <sys/types.h>
 #include "my_shell_executor.h"
+#include "my_shell_builtins.h"
+#include "my_shell_external.h"
 
 int shell_execute(char **args)
 {
-	pid_t pid;
+	int is_builtin;
+	int status;
 
 	if (args[0] == NULL)
 		return 1;
 
-	pid = fork();
-	if (pid < 0) {
-		/* failed */
-		perror("myshell");
-	} else if (pid == 0) {
-		/* child process */
-		execvp(args[0], args);
+	/* handles internal commands */
+	status = handle_builtin(args, &is_builtin);
+	if (is_builtin)
+		return status;
 
-		perror("myshell");
-		exit(EXIT_FAILURE);
-	} else {
-		/* parent process */
-		int status;
-		waitpid(pid, &status, 0);
-	}
-
-	return 1;
+	/* handles external commands */
+	return handle_external(args);
 }
