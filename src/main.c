@@ -21,29 +21,23 @@ void shell_read_loop(void)
 {
 	char input[BUFFER_SIZE];
 	char **args;
+	int status = 1;
 
-	while (1) {	
+	while (status) {	
 		fputs("myshell> ", stdout);
 		fflush(stdout);
 		
 		if (shell_read_line(input, sizeof(input)) == false)
-			break;
+			break;	
 
-		if (strncmp(input, "exit", 5) == 0) {
-			puts("exiting shell....");
-			break;
-		}
-		
 		args = shell_parse_line(input);
 		if (args == NULL)
 			puts("parsing error");
 		else
-			shell_execute(args);
+			status = shell_execute(args);
 
 		free(args);
 	}
-
-	puts("exited");
 }
 
 bool shell_read_line(char *input, int size)
