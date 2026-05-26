@@ -7,7 +7,6 @@
 
 int handle_external(char **args)
 {
-
 	pid_t pid;
 
 	pid = fork();
