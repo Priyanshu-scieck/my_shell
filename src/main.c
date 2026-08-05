@@ -1,3 +1,4 @@
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,7 +25,15 @@ void shell_read_loop(void)
 	int status = 1;
 
 	while (status) {	
-		fputs("myshell> ", stdout);
+		char *prompt = getcwd(NULL, 0);
+		if (!prompt) {
+			perror("error");
+			break;
+		}
+
+		fputs("myshell: ", stdout);
+		fputs(prompt, stdout);
+		fputs(" > ", stdout);
 		fflush(stdout);
 		
 		if (shell_read_line(input, sizeof(input)) == false)
@@ -37,6 +46,7 @@ void shell_read_loop(void)
 			status = shell_execute(args);
 
 		free(args);
+		free(prompt);
 	}
 }
 
