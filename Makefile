@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -std=c11 -Wall -Wextra -O2 -Iinclude
+CFLAGS = -std=c11 -Wall -Wextra -Werror -O2 -Iinclude
 
 TARGET = bin/myshell
 
