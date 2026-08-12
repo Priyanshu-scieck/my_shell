@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "my_shell_utils.h"
 #include "my_shell_parser.h"
 #include "my_shell_executor.h"
 
@@ -25,17 +26,7 @@ void shell_read_loop(void)
 	int status = 1;
 
 	while (status) {	
-		char *prompt = getcwd(NULL, 0);
-		if (!prompt) {
-			perror("error");
-			break;
-		}
-
-		fputs("myshell: ", stdout);
-		fputs(prompt, stdout);
-		fputs(" > ", stdout);
-		fflush(stdout);
-		
+		print_prompt();
 		if (shell_read_line(input, sizeof(input)) == false)
 			break;	
 
@@ -46,7 +37,6 @@ void shell_read_loop(void)
 			status = shell_execute(args);
 
 		free(args);
-		free(prompt);
 	}
 }
 

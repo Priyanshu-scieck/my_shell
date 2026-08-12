@@ -4,10 +4,10 @@ CFLAGS = -std=c11 -Wall -Wextra -Werror -O2 -Iinclude
 TARGET = bin/myshell
 
 # 1. Look for source files across both directories
-SRCS = $(wildcard src/*.c) $(wildcard src/builtins/*.c)
+SRCS = $(wildcard src/*.c) $(wildcard src/builtins/*.c) $(wildcard src/utils/*.c)
 
 # 2. Tell Make where to search for prerequisites automatically
-VPATH = src src/builtins
+VPATH = src src/builtins src/utils
 
 # 3. Strip the directory paths so all objects are flatly named (e.g., bin/cd.o)
 OBJS = $(patsubst %.c, bin/%.o, $(notdir $(SRCS)))
