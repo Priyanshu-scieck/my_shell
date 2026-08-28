@@ -10,19 +10,20 @@ void shell_read_loop(void)
 {
 	char input[BUFFER_SIZE];
 	char **args;
-	int status = 1;
+	int running = 1;
 
-	while (status) {	
+	while (running) {	
 		print_prompt();
 		if (shell_read_line(input, sizeof(input)) == false)
 			break;	
 
 		args = shell_parse_line(input);
-		if (args == NULL)
+		if (!args) {
 			puts("parsing error");
-		else
-			status = shell_execute(args);
+			continue;
+		}
 
+		running = shell_execute(args);
 		free(args);
 	}
 }
